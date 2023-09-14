@@ -128,7 +128,7 @@ class MongoDB:
             # Catch-all for unexpected errors
             print(f"Unexpected error occurred: {e}")
             return 0            
-    def DeleteMany(self, collection: str, **kwargs) -> int:
+    def Delete(self, collection: str, **kwargs) -> int:
         """
         Delete all documents from the specified collection that match the given filter.
 
@@ -156,6 +156,72 @@ class MongoDB:
             # Catch-all for unexpected errors
             print(f"Unexpected error occurred: {e}")
             return 0        
+    def UpdateOne(self, filter: dict, update: dict, collection: str, upsert=False) -> int:
+        """
+        Update a single document in the specified collection based on the provided filter.
+
+        Args:
+        - filter (dict): The criteria (query) to select the document to be updated.
+        - update (dict): The modifications to apply.
+        - collection (str): The name of the collection where the update should take place.
+        - upsert (bool): If True, create a new document if no document matches the filter.
+
+        Returns:
+        - int: The number of documents updated.
+        """
+        try:
+            coll = self.DataBase[collection]
+            result = coll.update_one(filter, update, upsert=upsert)
+            return result.modified_count
+        except errors.CollectionInvalid:
+            print("Invalid collection name or options.")
+            return 0
+        except errors.ServerSelectionTimeoutError:
+            print("Server selection error. Could not connect to the server.")
+            return 0
+        except errors.WriteError as we:
+            print(f"Write error: {we}")
+            return 0
+        except errors.PyMongoError as e:
+            print(f"MongoDB error: {e}")
+            return 0
+        except Exception as e:
+            # Catch-all for unexpected errors
+            print(f"Unexpected error occurred: {e}")
+            return 0
+    def Update(self, filter: dict, update: dict, collection: str, upsert=False) -> int:
+        """
+        Update a single document in the specified collection based on the provided filter.
+
+        Args:
+        - filter (dict): The criteria (query) to select the document to be updated.
+        - update (dict): The modifications to apply.
+        - collection (str): The name of the collection where the update should take place.
+        - upsert (bool): If True, create a new document if no document matches the filter.
+
+        Returns:
+        - int: The number of documents updated.
+        """
+        try:
+            coll = self.DataBase[collection]
+            result = coll.update_many(filter, update, upsert=upsert)
+            return result.modified_count
+        except errors.CollectionInvalid:
+            print("Invalid collection name or options.")
+            return 0
+        except errors.ServerSelectionTimeoutError:
+            print("Server selection error. Could not connect to the server.")
+            return 0
+        except errors.WriteError as we:
+            print(f"Write error: {we}")
+            return 0
+        except errors.PyMongoError as e:
+            print(f"MongoDB error: {e}")
+            return 0
+        except Exception as e:
+            # Catch-all for unexpected errors
+            print(f"Unexpected error occurred: {e}")
+            return 0
     def Connect(self):
         """
         Connects to a MongoDB instance using environment variables for URI and database name.
