@@ -5,4 +5,4 @@ config = NewConfig()
 config.DB_Connect()
 
 
-print(config.DataBase.Client)
+print(config)

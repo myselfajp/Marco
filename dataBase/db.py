@@ -7,8 +7,8 @@ class MongoDB:
         """
         Initializes the MongoDB client instance with None values.
         """
-        self.Client = None
-        self.DataBase = None
+        self.__Client = None
+        self.__DataBase = None
     def CreateOne(self, object : dict, collection : str, retries = 3):
         """
         Insert a single document into the specified collection.
@@ -23,7 +23,7 @@ class MongoDB:
         """
         for attempt in range(retries):
             try:
-                collection = self.DataBase[collection]
+                collection = self.__DataBase[collection]
                 result = collection.insert_one(object)
                 return result.inserted_id
             except errors.DuplicateKeyError as dke:
@@ -67,7 +67,7 @@ class MongoDB:
         """
         for attempt in range(retries):
             try:
-                coll = self.DataBase[collection]
+                coll = self.__DataBase[collection]
                 result = coll.insert_many(objects)
                 return result.inserted_ids
             except errors.BulkWriteError as bwe:
@@ -112,7 +112,7 @@ class MongoDB:
         - int: The number of documents deleted (0 or 1).
         """
         try:
-            coll = self.DataBase[collection]
+            coll = self.__DataBase[collection]
             result = coll.delete_one(kwargs)
             return result.deleted_count
         except errors.CollectionInvalid:
@@ -140,7 +140,7 @@ class MongoDB:
         - int: The number of documents deleted.
         """
         try:
-            coll = self.DataBase[collection]
+            coll = self.__DataBase[collection]
             result = coll.delete_many(kwargs)
             return result.deleted_count
         except errors.CollectionInvalid:
@@ -170,7 +170,7 @@ class MongoDB:
         - int: The number of documents updated.
         """
         try:
-            coll = self.DataBase[collection]
+            coll = self.__DataBase[collection]
             result = coll.update_one(filter, update, upsert=upsert)
             return result.modified_count
         except errors.CollectionInvalid:
@@ -203,7 +203,7 @@ class MongoDB:
         - int: The number of documents updated.
         """
         try:
-            coll = self.DataBase[collection]
+            coll = self.__DataBase[collection]
             result = coll.update_many(filter, update, upsert=upsert)
             return result.modified_count
         except errors.CollectionInvalid:
@@ -241,14 +241,14 @@ class MongoDB:
         if not dbName:
             raise ValueError("DBNAME environment variable not set!")
 
-        self.Client = MongoClient(uri)
+        self.__Client = MongoClient(uri)
         try:
-            self.Client.admin.command('ping')
+            self.__Client.admin.command('ping')
             print("Pinged your deployment. You successfully connected to MongoDB!")
         except Exception as e:
             print("Error connecting to MongoDB.")
             raise e
-        self.DataBase = self.Client[dbName]
+        self.__DataBase = self.__Client[dbName]
     def Disconnect(self):
         """
         Disconnects from the current MongoDB instance.
@@ -256,6 +256,6 @@ class MongoDB:
         Note:
         - If already disconnected or not connected, this method is safe to call.
         """
-        if self.Client:
-            self.Client.close()
+        if self.__Client:
+            self.__Client.close()
             print("Disconnected from MongoDB.")
