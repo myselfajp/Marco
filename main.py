@@ -1,9 +1,6 @@
-from configs.configs import ActiveEnv
-from configs.configs import Configs
+from configs.configs import NewConfig
 
-ActiveEnv()
-
-config = Configs()
+config = NewConfig()
 
 config.DB_Connect()
 

@@ -3,6 +3,7 @@ from dataBase.db import MongoDB as DataBase
 
 class Configs :
     def __init__(self) -> None:
+        ActiveEnv()
         self.DataBase = DataBase()
         self.Brand = None
 
@@ -15,3 +16,6 @@ def ActiveEnv() -> None:
     isLoaderActive = load_dotenv('.env')
     if not isLoaderActive :
         raise SystemExit(".env file not found")
+
+def NewConfig() -> Configs:
+    return Configs()
