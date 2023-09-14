@@ -47,6 +47,12 @@ class MongoDB:
                 # Catch any other generic PyMongo errors
                 print(f"MongoDB error: {e}")
                 return None
+            except Exception as e:
+                # Catch-all for unexpected errors
+                print(f"Unexpected error occurred: {e}")
+                return None
+        print(f"Could not write data dafter {retries} time try.")
+        return None
     def CreateMany(self, objects: list, collection: str, retries=3):
         """
         Insert multiple documents into the specified collection.
@@ -88,6 +94,68 @@ class MongoDB:
                 # Catch any other generic PyMongo errors
                 print(f"MongoDB error: {e}")
                 return None
+            except Exception as e:
+                # Catch-all for unexpected errors
+                print(f"Unexpected error occurred: {e}")
+                return None
+        print(f"Could not write data dafter {retries} time try.")
+        return None
+    def DeleteOne(self, collection: str, **kwargs) -> int:
+        """
+        Delete a single document from the specified collection based on a given filter.
+
+        Args:
+        - filter (dict): The criteria (query) to select the document to be deleted.
+        - collection (str): The name of the collection from which the document should be deleted.
+
+        Returns:
+        - int: The number of documents deleted (0 or 1).
+        """
+        try:
+            coll = self.DataBase[collection]
+            result = coll.delete_one(kwargs)
+            return result.deleted_count
+        except errors.CollectionInvalid:
+            print("Invalid collection name or options.")
+            return 0
+        except errors.ServerSelectionTimeoutError:
+            print("Server selection error. Could not connect to the server.")
+            return 0
+        except errors.PyMongoError as e:
+            print(f"MongoDB error: {e}")
+            return 0
+        except Exception as e:
+            # Catch-all for unexpected errors
+            print(f"Unexpected error occurred: {e}")
+            return 0            
+    def DeleteMany(self, collection: str, **kwargs) -> int:
+        """
+        Delete all documents from the specified collection that match the given filter.
+
+        Args:
+        - filter (dict): The criteria (query) to select the documents to be deleted.
+        - collection (str): The name of the collection from which the documents should be deleted.
+
+        Returns:
+        - int: The number of documents deleted.
+        """
+        try:
+            coll = self.DataBase[collection]
+            result = coll.delete_many(kwargs)
+            return result.deleted_count
+        except errors.CollectionInvalid:
+            print("Invalid collection name or options.")
+            return 0
+        except errors.ServerSelectionTimeoutError:
+            print("Server selection error. Could not connect to the server.")
+            return 0
+        except errors.PyMongoError as e:
+            print(f"MongoDB error: {e}")
+            return 0
+        except Exception as e:
+            # Catch-all for unexpected errors
+            print(f"Unexpected error occurred: {e}")
+            return 0        
     def Connect(self):
         """
         Connects to a MongoDB instance using environment variables for URI and database name.
