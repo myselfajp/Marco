@@ -51,7 +51,7 @@ class MongoDB:
                 # Catch-all for unexpected errors
                 print(f"Unexpected error occurred: {e}")
                 return None
-        print(f"Could not write data dafter {retries} time try.")
+        print(f"Could not write data after {retries} time try.")
         return None
     def CreateMany(self, objects: list, collection: str, retries=3):
         """
@@ -240,8 +240,10 @@ class MongoDB:
         dbName = os.environ.get("DBNAME")
         if not dbName:
             raise ValueError("DBNAME environment variable not set!")
-
-        self.__Client = MongoClient(uri)
+        if not self.__Client:
+            self.__Client = MongoClient(uri)
+        else:
+            return
         try:
             self.__Client.admin.command('ping')
             print("Pinged your deployment. You successfully connected to MongoDB!")

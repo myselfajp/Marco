@@ -1,0 +1,2 @@
+def TranslateNeeded():
+    print("ok")

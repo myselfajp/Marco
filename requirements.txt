@@ -1,2 +1,4 @@
 python-dotenv
 pymongo
+bs4
+requests

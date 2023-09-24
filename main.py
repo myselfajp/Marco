@@ -1,8 +1,12 @@
 from configs.configs import NewConfig
+from crawler.crawler import CrawlerContext,LcWaikiki
 
-config = NewConfig()
+# Create database connection
+App = NewConfig()
 
-config.DB_Connect()
+# Set strategy and fetch data
+crawler = CrawlerContext().SetStrategy(LcWaikiki()).SetConfig(App)
 
+data = crawler.ExecuteCrawling()
 
-print(config)
+App.DB_Disconnect()
