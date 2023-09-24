@@ -1,4 +1,4 @@
-from crawler.core.addToLocal import TranslateNeeded
+from crawler.utils.addToLocal import TranslateNeeded
 
 
 def size_translate(Size,brand):
@@ -46,43 +46,21 @@ def size_translate(Size,brand):
         return Size
 
 
-def site_categories(id=None,name=None):
-    cats = [   #need update (add all categories)
-        {"id":"90","name":"مردانه"},
-        {"id":"91","name":"زنانه"},
-        {"id":"368","name":"پسرانه"},
-        {"id":"336","name":"دخترانه"},
-        {"id":"319","name":"نوزاد"},
-        ]
-    try:
-        if id:
-            return [x["name"] for x in cats if x["id"]==id][0]
-        elif name:
-            return [x["id"] for x in cats if x["name"]==name]
-    except:
-        return None
-
-
-def site_brands(id=None,name=None):
-    # cats = [ # need update its local id have to change for wp
-    #     {"id":422,"name":"victoria_secret"},{"id":451,"name":"lc_waikiki"},{"id":687,"name":"koton"},{"id":813,"name":"bershka"},{"id":860,"name":"zara"},
-    #     ]
-
-    cats = [ #WP
-            {"id":428,"name":"lc_waikiki"},
-            {"id":536,"name":"koton"},
-            {"id":537,"name":"bershka"},
-            {"id":538,"name":"zara"},
-            {"id":422,"name":"victoria_secret"},
-            ]
-
-    try:
-        if id:
-            return [x["name"] for x in cats if x["id"]==id][0]
-        elif name:
-            return [x["id"] for x in cats if x["name"]==name]
-    except:
-        return None
+def genderFinder(categories = list):
+    gender = None 
+    if "متفرقه" in categories:
+        gender = "متفرقه"
+    elif "مردانه" in categories:
+        gender = "مردانه"
+    elif "زنانه" in categories:
+        gender = "زنانه"
+    elif "پسرانه" in categories:
+        gender = "پسرانه"
+    elif "دخترانه" in categories:
+        gender = "دخترانه"
+    else:
+        gender = "دسته بندی نشده"
+    return gender
 
 
 def price_comision(price,url):

@@ -1,4 +1,4 @@
-from crawler.core.dict import title_translate,site_categories,site_brands,size_translate,description
+from crawler.utils.translate import title_translate,genderFinder,size_translate,description
 from bs4 import BeautifulSoup
 import requests
 # import json
@@ -10,7 +10,7 @@ def product_sku(product):
     try:
         product_id = product.find("meta", attrs={"name": "ModelId"}).attrs["content"]
 
-        return f"lc_waikiki-{product_id}"
+        return f"LcWaikiki-{product_id}"
     except Exception as e:
         print("error 325241",e)
         return
@@ -156,7 +156,6 @@ def product_attributes(product,sku,name):
 
 def crawler(url,categories):
     data={}
-    sex_id=categories[0]
     try:
         product=BeautifulSoup(requests.get(url,headers=headers).text,'html.parser')
         # print(json.dumps(product, indent=2))
@@ -165,15 +164,15 @@ def crawler(url,categories):
         return
 
     sku = product_sku(product)
-    sex=site_categories(id=sex_id)
+    sex=genderFinder(categories)
     name = product_name(product,url,sex,sku)
     short_name = name.split("-")[0]
     images = product_images(product,sku,short_name)
     attributes = product_attributes(product,sku,short_name)
     description = product_description(categories[2],sex,sku,short_name)
-    brand = site_brands(name="lc_waikiki")
+    brand = "LcWaikiki"
 
-    data["p_url"]=url
+    data["p_url"] = url
     data["p_sku"] = sku
     data["p_name"] = name
     data["p_brand"] = brand
@@ -182,7 +181,7 @@ def crawler(url,categories):
     data["p_categories"] = categories
     # data["p_description"] = description
 
-    # a=json.dumps(data, indent=2)
+    # a = json.dumps(data, indent=2)
     if sku and name and images and attributes:return data 
     else:
         print("product does not scrapped",url)

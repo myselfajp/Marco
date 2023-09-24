@@ -15,7 +15,7 @@ class AbstractCrawler(ABC):
 class LcWaikiki(AbstractCrawler):
     def __init__(self) -> None:
         self.links = None
-        
+        self.name = "ال سی وایکیکی"
     def FetchLinks(self):
         from crawler.lcWaikiki.fetchLink import FetchLink
         self.links = FetchLink()
@@ -48,5 +48,8 @@ class CrawlerContext:
         self._strategy.FetchLinks()
         data = self._strategy.RunTest()
         for obj in data:
-            id = self._app.DataBase.CreateOne(obj,"Products")
-            print(f"data added with id : {id}")
+            id = self._app.DataBase.CreateOne(obj,"LcWaikiki")
+            if id :
+                print(f"data added with id : {id}")
+            else:
+                print(f"data was :{data}")
