@@ -1,11 +1,9 @@
 from configs.configs import NewConfig
-from crawler.crawler import CrawlerContext,LcWaikiki
+from crawler.crawler import CrawlerContext,GetStrategy
 
-# Create database connection
 App = NewConfig()
-
-# Set strategy and fetch data
-crawler = CrawlerContext().SetStrategy(LcWaikiki()).SetConfig(App)
+strategy = GetStrategy("LcWaikiki")
+crawler = CrawlerContext().SetStrategy(strategy).SetConfig(App)
 
 data = crawler.ExecuteCrawling()
 
