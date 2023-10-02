@@ -7,6 +7,7 @@ class App :
         self._ActiveEnv()
         self.DB_Connect()
         self.Brand = None
+        self.numThreads = 1
 
     def DB_Connect(self):
         self.DataBase.Connect()
